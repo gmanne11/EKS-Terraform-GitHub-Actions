@@ -19,7 +19,7 @@ pipeline {
         }
          stage('Clone Repository') {
             steps {
-                git credentialsId: 'git-creds', url: 'https://github.com/gmanne11/EKS-Terraform-GitHub-Actions.git'
+                git branch: 'main', credentialsId: 'git-creds', url: 'https://github.com/gmanne11/EKS-Terraform-GitHub-Actions.git'
             }
         }
         stage('Init') {
