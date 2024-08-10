@@ -17,9 +17,9 @@ pipeline {
                 sh 'echo Preparing'
             }
         }
-        stage('Git Pulling') {
+         stage('Clone Repository') {
             steps {
-                git branch: 'master', url: 'https://github.com/gmanne11/EKS-Terraform-GitHub-Actions.git'
+                git credentialsId: 'git-creds', url: 'https://github.com/gmanne11/EKS-Terraform-GitHub-Actions.git'
             }
         }
         stage('Init') {
