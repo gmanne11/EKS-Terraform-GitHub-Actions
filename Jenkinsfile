@@ -56,13 +56,14 @@ pipeline {
         }
     }
     post {
-    always {
-        emailext (
-            subject: "Pipeline Status: ${currentBuild.result}",
-            body: "Build Status: ${currentBuild.result}\nCheck the console output: ${env.BUILD_URL}",
-            to: 'gopim4959@gmail.com',
-            from: 'jenkins@example.com',
-            mimeType: 'text/plain'
-        )
+        always {
+            emailext (
+                subject: "Pipeline Status: ${currentBuild.result}",
+                body: "Build Status: ${currentBuild.result}\nCheck the console output: ${env.BUILD_URL}",
+                to: 'gopim4959@gmail.com',
+                from: 'jenkins@example.com',
+                mimeType: 'text/plain'
+            )
+        }
     }
 }
