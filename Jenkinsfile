@@ -7,7 +7,8 @@ properties([
         choice(
             choices: ['plan', 'apply', 'destroy'], 
             name: 'Terraform_Action'
-        )])
+        )
+    ])
 ])
 pipeline {
     agent any
@@ -17,7 +18,7 @@ pipeline {
                 sh 'echo Preparing'
             }
         }
-         stage('Clone Repository') {
+        stage('Clone Repository') {
             steps {
                 git branch: 'main', credentialsId: 'git-creds', url: 'https://github.com/gmanne11/EKS-Terraform-GitHub-Actions.git'
             }
@@ -55,25 +56,21 @@ pipeline {
         }
     }
     post {
-        success {
-            script {
-                // Send email on success
-                emailext (
-                    subject: "Jenkins Pipeline Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: "The pipeline has completed successfully.\n\nCheck console output at ${env.BUILD_URL}",
-                    recipientProviders: [[$class: 'CulpritRecipientProvider'], [$class: 'RequesterRecipientProvider']]
-                )
-            }
-        }
-        failure {
-            script {
-                // Send email on failure
-                emailext (
-                    subject: "Jenkins Pipeline Failure: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                    body: "The pipeline has failed.\n\nCheck console output at ${env.BUILD_URL}",
-                    recipientProviders: [[$class: 'CulpritRecipientProvider'], [$class: 'RequesterRecipientProvider']]
-                )
-            }
+        always {
+            emailext (
+                subject: "Pipeline Status: ${currentBuild.result}",
+                body: '''<html>
+                           <body>
+                               <p>Build Status: ${currentBuild.result}</p>
+                               <p>Build Number: ${env.BUILD_NUMBER}</p>
+                               <p>Check the <a href="${env.BUILD_URL}">CONSOLE OUTPUT</a>.</p>
+                           </body>
+                        </html>''',
+                to: 'gopim4959@gmail.com',
+                from: 'jenkins@example.com',
+                replyTo: 'jenkins@example.com',
+                mimeType: 'text/html'       
+            )
         }
     }
 }
