@@ -23,13 +23,25 @@ pipeline {
                 git branch: 'main', credentialsId: 'git-creds', url: 'https://github.com/gmanne11/EKS-Terraform-GitHub-Actions.git'
             }
         }
-        stage('Init') {
+
+        stage('Terraform Init') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                    dir('eks') {
+                        sh 'echo "================= Terraform Init =================="'
+                        sh 'terraform init'
+                    }
+                }
+            }
+        }
+
+        /*stage('Init') {
             steps {
                 withAWS(credentials: 'aws-creds', region: 'us-east-1') {
                     sh 'terraform -chdir=eks/ init'
                 }
             }
-        }
+        }*/
         stage('Validate') {
             steps {
                 withAWS(credentials: 'aws-creds', region: 'us-east-1') {
